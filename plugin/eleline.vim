@@ -188,11 +188,6 @@ function! ElelineCoc() abort
 	return ''
 endfunction
 
-function! ElelineScroll() abort
-	if !exists("*ScrollStatus") | return '' | endif
-	return ScrollStatus()
-endfunction
-
 " https://github.com/liuchengxu/eleline.vim/wiki
 function! s:StatusLine() abort
 	function! s:def(fn) abort
@@ -208,7 +203,6 @@ function! s:StatusLine() abort
 	let l:tags = '%{exists("b:gutentags_files") ? gutentags#statusline() : ""} '
 	let l:lcn = '%{ElelineLCN()}'
 	let l:coc = '%{ElelineCoc()}'
-	let l:scroll = '%{ElelineScroll()}'
 	let l:vista = '%#ElelineVista#%{ElelineVista()}%*'
 	let l:prefix = l:bufnr_winnr.l:paste
 	if get(g:, 'eleline_slim', 0)
@@ -221,12 +215,8 @@ function! s:StatusLine() abort
 	let l:enc = ' %{&fenc != "" ? &fenc : &enc} | %{&bomb ? ",BOM " : ""}'
 	let l:ff = '%{&ff} %*'
 	let l:pct = '%#Eleline9# %P %*'
-	if l:scroll != ''
-		let l:pct = ''
-		let l:scroll = '%#Eleline7#%*'.l:scroll
-	endif
 	let l:common = l:paste.l:curfname.l:branch.' '.l:status.l:error.l:warning.l:tags.l:lcn.l:coc.l:vista
-	return l:common.'%='.l:m_r_f.l:pos.l:scroll.l:fsize " .l:enc.l:ff.l:pct
+	return l:common.'%='.l:m_r_f.l:pos.l:fsize " .l:enc.l:ff.l:pct
 endfunction
 
 let s:colors = {
