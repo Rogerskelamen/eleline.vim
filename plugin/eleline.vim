@@ -1,8 +1,8 @@
 " ============================================================================
 " Filename: eleline.vim
-" Author: Liu-Cheng Xu
-" Fork: theniceboy
-" URL: https://github.com/liuchengxu/eleline.vim
+" Author: theniceboy
+" Fork: Rogerskelamen
+" URL: https://github.com/theniceboy/eleline.vim
 " License: MIT License
 " =============================================================================
 scriptencoding utf-8
