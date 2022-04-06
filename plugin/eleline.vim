@@ -20,7 +20,7 @@ set cpoptions&vim
 let s:font = get(g:, 'eleline_powerline_fonts', get(g:, 'airline_powerline_fonts', 0))
 let s:fn_icon = s:font ? get(g:, 'eleline_function_icon', " \uf794 ") : ''
 " 判断是否用gui打开
-et s:gui = has('gui_running')
+let s:gui = has('gui_running')
 " 判断是否为Windows系统
 let s:is_win = has('win32')
 let s:git_branch_cmd = add(s:is_win ? ['cmd', '/c'] : ['bash', '-c'], 'git branch')
