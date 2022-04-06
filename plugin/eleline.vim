@@ -5,7 +5,9 @@
 " URL: https://github.com/theniceboy/eleline.vim
 " License: MIT License
 " =============================================================================
+" set for script encode
 scriptencoding utf-8
+" check whether there is eleline and whether the vim version is greater than 7.0
 if exists('g:loaded_eleline') || v:version < 700
 	finish
 endif
@@ -14,11 +16,15 @@ let g:loaded_eleline = 1
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
+" get the powerline_fonts
 let s:font = get(g:, 'eleline_powerline_fonts', get(g:, 'airline_powerline_fonts', 0))
 let s:fn_icon = s:font ? get(g:, 'eleline_function_icon', " \uf794 ") : ''
-let s:gui = has('gui_running')
+" 判断是否用gui打开
+et s:gui = has('gui_running')
+" 判断是否为Windows系统
 let s:is_win = has('win32')
 let s:git_branch_cmd = add(s:is_win ? ['cmd', '/c'] : ['bash', '-c'], 'git branch')
+" 如果设置了powerline_fonts就展示\ue0a0
 let s:git_branch_symbol = s:font ? " \ue0a0 " : ' Git:'
 let s:git_branch_star_substituted = s:font ? "  \ue0a0" : '  Git:'
 let s:jobs = {}
@@ -32,14 +38,17 @@ function! ElelineBufnrWinnr() abort
 	return '  '.l:bufnr.' ❖ '.winnr().' '
 endfunction
 
+" tip for current buffer
 function! ElelineTotalBuf() abort
 	return '[TOT:'.len(filter(range(1, bufnr('$')), 'buflisted(v:val)')).']'
 endfunction
 
+" tip for paste status
 function! ElelinePaste() abort
 	return &paste ? 'PASTE ' : ''
 endfunction
 
+" display fileSize
 function! ElelineFsize(f) abort
 	let l:size = getfsize(expand(a:f))
 	if l:size == 0 || l:size == -1 || l:size == -2
@@ -57,10 +66,12 @@ function! ElelineFsize(f) abort
 	return '  '.size.' '
 endfunction
 
+" display fileName
 function! ElelineCurFname() abort
 	return &filetype ==# 'startify' ? '' : '  '.expand('%:p:t').' '
 endfunction
 
+" display error info
 function! ElelineError() abort
 	if exists('g:loaded_ale')
 		let s:ale_counts = ale#statusline#Count(bufnr(''))
@@ -69,6 +80,7 @@ function! ElelineError() abort
 	return ''
 endfunction
 
+" display warning info
 function! ElelineWarning() abort
 	if exists('g:loaded_ale')
 		" Ensure ElelineWarning() is called after ElelineError() so that s:ale_counts can be reused.
@@ -79,7 +91,7 @@ endfunction
 
 function! s:is_tmp_file() abort
 	if !empty(&buftype)
-				\ || index(['startify', 'gitcommit'], &filetype) > -1
+				\ || index(['startify', 'gitcommit', 'nerdtree'], &filetype) > -1
 				\ || expand('%:p') =~# '^/tmp'
 		return 1
 	else
@@ -116,6 +128,7 @@ function! ElelineGitBranch(...) abort
 			\})
 		if job_id == 0 || job_id == -1 | return '' | endif
 		let s:jobs[job_id] = root
+	" 存在fugitive的情况
 	elseif exists('g:loaded_fugitive')
 		let l:head = fugitive#head()
 		return empty(l:head) ? '' : s:git_branch_symbol.l:head . ' '
