@@ -101,7 +101,7 @@ endfunction
 " tip for readonly
 function! MyStatusReadonly() abort
   if !&readonly | return '' |endif
-  return "  "
+  return "   "
 endfunction
 
 " check if it's tmp file or startify plugin etc.
@@ -250,7 +250,7 @@ function! s:StatusLine() abort
 	let l:tot = s:def('ElelineTotalBuf')
 	let l:fsize = '%#ElelineFsize#%{ElelineFsize(@%)}'
 	let l:m_r_f = '%#Eleline7# %y %*'
-	let l:pos = '%#Eleline8# '.(s:font?"\ue0a1":'').' %l/%L:%c%V '
+	let l:pos = '%#Eleline8# '.(s:font?"\ue0a1":'').'%l/%L:%c%V '
 	let l:enc = ' %{&fenc != "" ? &fenc : &enc} | %{&bomb ? ",BOM " : ""}'
 	let l:ff = '%{&ff} %*'
 	let l:pct = '%#Eleline9# %P %*'
@@ -356,6 +356,7 @@ function! s:InsertStatuslineColor(mode) abort
 	else
 		call s:hi('ElelineCurFname' , [232, 178], [89, ''])
 	endif
+	redraw!
 endfunction
 
 " Note that the "%!" expression is evaluated in the context of the
