@@ -7,38 +7,46 @@
 " =============================================================================
 " set for script encode
 scriptencoding utf-8
-" check whether there is eleline and whether the vim version is greater than 7.0
+" If there is eleline exists or vim version is greater than 7.0, then exit
 if exists('g:loaded_eleline') || v:version < 700
 	finish
 endif
-let g:loaded_eleline = 1
+let g:loaded_eleline = 1 " turn on eleline
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 " get the powerline_fonts
-let s:font = get(g:, 'eleline_powerline_fonts', get(g:, 'airline_powerline_fonts', 0))
+" if eleline_powerline_fonts does not exist then use
+" airline_powerline_fonts(font = 1)
+" if both not exist, then use font = 0
+let s:font = get(g:, 'eleline_powerline_fonts', get(g:, 'airline_powerline_fonts', 0)) " s:font = 1
+" use fn_icon if s:font is setted(use  if eleline_function_icon is not specified)
 let s:fn_icon = s:font ? get(g:, 'eleline_function_icon', " \uf794 ") : ''
-" 判断是否用gui打开
+" whether running on gui
 let s:gui = has('gui_running')
-" 判断是否为Windows系统
+" whether running on Windows
 let s:is_win = has('win32')
+" set git branch command(diff cmd for diff OS)
+" win: cmd /c git branch
+" others: bash -c git branch
 let s:git_branch_cmd = add(s:is_win ? ['cmd', '/c'] : ['bash', '-c'], 'git branch')
-" 如果设置了powerline_fonts就展示\ue0a0
+" set git symbol to \ue0a0 if powerline_fonts exists
 let s:git_branch_symbol = s:font ? " \ue0a0 " : ' Git:'
 let s:git_branch_star_substituted = s:font ? "  \ue0a0" : '  Git:'
 let s:jobs = {}
 
+" display number of current buffer and window
 function! ElelineBufnrWinnr() abort
-	let l:bufnr = bufnr('%')
+	let l:bufnr = bufnr('%') " find current buffer
 	if !s:gui
-		" transform to circled num: nr2char(9311 + l:bufnr)
+		" transform to circled num: nr2char(9311 + l:bufnr)①
 		let l:bufnr = l:bufnr > 20 ? l:bufnr : nr2char(9311 + l:bufnr).' '
 	endif
 	return '  '.l:bufnr.' ❖ '.winnr().' '
 endfunction
 
-" tip for current buffer
+" tip for current buffer(sum of bufs)
 function! ElelineTotalBuf() abort
 	return '[TOT:'.len(filter(range(1, bufnr('$')), 'buflisted(v:val)')).']'
 endfunction
@@ -51,19 +59,20 @@ endfunction
 " display fileSize
 function! ElelineFsize(f) abort
 	let l:size = getfsize(expand(a:f))
+	" not a file | can't find file | file is too big -> don't display size
 	if l:size == 0 || l:size == -1 || l:size == -2
 		return ''
 	endif
 	if l:size < 1024
 		let size = l:size.' bytes'
 	elseif l:size < 1024*1024
-		let size = printf('%.1f', l:size/1024.0).'k'
+		let size = printf('%.1f', l:size/1024.0) . 'K'
 	elseif l:size < 1024*1024*1024
-		let size = printf('%.1f', l:size/1024.0/1024.0) . 'm'
+		let size = printf('%.1f', l:size/1024.0/1024.0) . 'M'
 	else
-		let size = printf('%.1f', l:size/1024.0/1024.0/1024.0) . 'g'
+		let size = printf('%.1f', l:size/1024.0/1024.0/1024.0) . 'G'
 	endif
-	return '  '.size.' '
+	return ' '.size.' '
 endfunction
 
 " display fileName
@@ -89,10 +98,17 @@ function! ElelineWarning() abort
 	return ''
 endfunction
 
+" tip for readonly
+function! MyStatusReadonly() abort
+  if !&readonly | return '' |endif
+  return "  "
+endfunction
+
+" check if it's tmp file or startify plugin etc.
 function! s:is_tmp_file() abort
 	if !empty(&buftype)
-				\ || index(['startify', 'gitcommit', 'nerdtree'], &filetype) > -1
-				\ || expand('%:p') =~# '^/tmp'
+		\ || index(['startify', 'gitcommit', 'coc-explorer', 'nerdtree'], &filetype) > -1
+		\ || expand('%:p') =~# '^/tmp'
 		return 1
 	else
 		return 0
@@ -102,14 +118,14 @@ endfunction
 " Reference: https://github.com/chemzqm/vimrc/blob/master/statusline.vim
 function! ElelineGitBranch(...) abort
 	if s:is_tmp_file() | return '' | endif
-	let reload = get(a:, 1, 0) == 1
+	let reload = get(a:, 1, 0) == 1 | " get the second arg
 	if exists('b:eleline_branch') && !reload | return b:eleline_branch | endif
 	if !exists('*FugitiveExtractGitDir') | return '' | endif
-	let dir = exists('b:git_dir') ? b:git_dir : FugitiveExtractGitDir(resolve(expand('%:p')))
+	let dir = exists('b:git_dir') ? b:git_dir : FugitiveExtractGitDir(resolve(expand('%:p'))) | " get git hidden dir .git
 	if empty(dir) | return '' | endif
 	let b:git_dir = dir
 	let roots = values(s:jobs)
-	let root = fnamemodify(dir, ':h')
+	let root = fnamemodify(dir, ':h') " get cwd for jobstart
 	if index(roots, root) >= 0 | return '' | endif
 
 	let argv = add(has('win32') ? ['cmd', '/c']: ['bash', '-c'], 'git branch')
@@ -128,7 +144,7 @@ function! ElelineGitBranch(...) abort
 			\})
 		if job_id == 0 || job_id == -1 | return '' | endif
 		let s:jobs[job_id] = root
-	" 存在fugitive的情况
+	" if fugitive exists
 	elseif exists('g:loaded_fugitive')
 		let l:head = fugitive#head()
 		return empty(l:head) ? '' : s:git_branch_symbol.l:head . ' '
@@ -162,7 +178,7 @@ function! s:on_exit(job_id, data, _event) dict abort
 endfunction
 
 function! s:SetGitBranch(root, str) abort
-	let buf_list = filter(range(1, bufnr('$')), 'bufexists(v:val)')
+	let buf_list = filter(range(1, bufnr('$')), 'bufexists(v:val)') | " get all bufs
 	let root = a:root
 	for nr in buf_list
 		let path = fnamemodify(bufname(nr), ':p')
@@ -173,8 +189,9 @@ function! s:SetGitBranch(root, str) abort
 	redraws!
 endfunction
 
+" tip for git status
 function! ElelineGitStatus() abort
-	let l:summary = [0, 0, 0]
+	let l:summary = [0, 0, 0] " three opt: add, modified, delete
 	if exists('b:sy')
 		let l:summary = b:sy.stats
 	elseif exists('b:gitgutter.summary')
@@ -186,6 +203,7 @@ function! ElelineGitStatus() abort
 	return ''
 endfunction
 
+" tip for loading lsp
 function! ElelineLCN() abort
 	if !exists('g:LanguageClient_loaded') | return '' | endif
 	return eleline#LanguageClientNeovim()
@@ -195,12 +213,14 @@ function! ElelineVista() abort
 	return !empty(get(b:, 'vista_nearest_method_or_function', '')) ? s:fn_icon.b:vista_nearest_method_or_function : ''
 endfunction
 
+" tip for coc
 function! ElelineCoc() abort
 	if s:is_tmp_file() | return '' | endif
 	if get(g:, 'coc_enabled', 0) | return coc#status().' ' | endif
-	return ''
+	return '' | " return nothing if anything can't match
 endfunction
 
+" display scroll
 function! ElelineScroll() abort
 	if !exists("*ScrollStatus") | return '' | endif
 	return ScrollStatus()
@@ -213,7 +233,7 @@ function! s:StatusLine() abort
 	endfunction
 	let l:bufnr_winnr = s:def('ElelineBufnrWinnr')
 	let l:paste = s:def('ElelinePaste')
-	let l:curfname = s:def('ElelineCurFname').'%m%r'
+	let l:curfname = s:def('ElelineCurFname').'%m'.s:def('MyStatusReadonly')
 	let l:branch = s:def('ElelineGitBranch')
 	let l:status = s:def('ElelineGitStatus')
 	let l:error = s:def('ElelineError')
@@ -230,7 +250,7 @@ function! s:StatusLine() abort
 	let l:tot = s:def('ElelineTotalBuf')
 	let l:fsize = '%#ElelineFsize#%{ElelineFsize(@%)}'
 	let l:m_r_f = '%#Eleline7# %y %*'
-	let l:pos = '%#Eleline8# '.(s:font?"\ue0a1":'').'%l/%L:%c%V '
+	let l:pos = '%#Eleline8# '.(s:font?"\ue0a1":'').' %l/%L:%c%V '
 	let l:enc = ' %{&fenc != "" ? &fenc : &enc} | %{&bomb ? ",BOM " : ""}'
 	let l:ff = '%{&ff} %*'
 	let l:pct = '%#Eleline9# %P %*'
@@ -266,12 +286,13 @@ function! s:extract(group, what, ...) abort
 	endif
 endfunction
 
+" whether to set eleline_background
 if !exists('g:eleline_background')
 	let s:normal_bg = s:extract('Normal', 'bg', 'cterm')
 	if s:normal_bg >= 233 && s:normal_bg <= 243
 		let s:bg = s:normal_bg
 	else
-		let s:bg = 235
+		let s:bg = 235 | " set default bg to 235
 	endif
 else
 	let s:bg = g:eleline_background
@@ -282,10 +303,11 @@ if has('termguicolors') && &termguicolors
 	let s:bg = 235
 endif
 
+" set color for a certain tip
 function! s:hi(group, dark, light, ...) abort
 	let [fg, bg] = &bg ==# 'dark' ? a:dark : a:light
 
-	if empty(bg) && &bg ==# 'light'
+	if empty(bg) && &bg ==# 'light' | " if light then reverse
 		let reverse = s:extract('StatusLine', 'reverse')
 		let ctermbg = s:extract('StatusLine', reverse ? 'fg' : 'bg', 'cterm')
 		let guibg = s:extract('StatusLine', reverse ? 'fg': 'bg' , 'gui')
@@ -293,6 +315,7 @@ function! s:hi(group, dark, light, ...) abort
 		let ctermbg = bg
 		let guibg = s:colors[bg]
 	endif
+	" change the tip color display
 	execute printf('hi %s ctermfg=%d guifg=%s ctermbg=%d guibg=%s',
 								\ a:group, fg, s:colors[fg], ctermbg, guibg)
 	if a:0 == 1
@@ -300,6 +323,7 @@ function! s:hi(group, dark, light, ...) abort
 	endif
 endfunction
 
+" set color for tips
 function! s:hi_statusline() abort
 	call s:hi('ElelineBufnrWinnr' , [232 , 178]    , [89 , '']  )
 	call s:hi('ElelineTotalBuf'   , [178 , s:bg+8] , [240 , ''] )
@@ -319,13 +343,16 @@ function! s:hi_statusline() abort
 	call s:hi('Eleline7'      , [249 , s:bg+3], [237, ''] )
 	call s:hi('Eleline8'      , [250 , s:bg+4], [238, ''] )
 	call s:hi('Eleline9'      , [251 , s:bg+5], [239, ''] )
-	endfunction
+endfunction
 
-	function! s:InsertStatuslineColor(mode) abort
+" set for insertmode color
+function! s:InsertStatuslineColor(mode) abort
 	if a:mode ==# 'i'
 		call s:hi('ElelineCurFname' , [251, 32] , [251, 89])
 	elseif a:mode ==# 'r'
-		call s:hi('ElelineCurFname' , [232, 160], [232, 160])
+		call s:hi('ElelineCurFname' , [232, 124], [232, 124])
+	elseif a:mode ==# 'v'
+		call s:hi('ElelineCurFname' , [251, 249], [251, 249])
 	else
 		call s:hi('ElelineCurFname' , [232, 178], [89, ''])
 	endif
