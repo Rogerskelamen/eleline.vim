@@ -233,7 +233,7 @@ function! s:StatusLine() abort
 	endfunction
 	let l:bufnr_winnr = s:def('ElelineBufnrWinnr')
 	let l:paste = s:def('ElelinePaste')
-	let l:curfname = s:def('ElelineCurFname').'%m'.s:def('MyStatusReadonly')
+	let l:curfname = s:def('ElelineCurFname').'%m'.s:def('ElelineReadonly')
 	let l:branch = s:def('ElelineGitBranch')
 	let l:status = s:def('ElelineGitStatus')
 	let l:error = s:def('ElelineError')
