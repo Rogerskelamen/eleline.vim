@@ -370,6 +370,7 @@ function! s:SetStatusLine(...) abort
 	let &l:statusline = s:StatusLine()
 	" User-defined highlightings shoule be put after colorscheme command.
 	call s:hi_statusline()
+	call s:DetectModeChange()
 endfunction
 
 if exists('*timer_start')
