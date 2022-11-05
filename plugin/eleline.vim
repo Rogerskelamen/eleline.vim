@@ -331,12 +331,12 @@ function! s:hi_statusline() abort
 	call s:hi('ElelinePaste'      , [232 , 178]    , [232 , 178]    , 'bold')
 	call s:hi('ElelineFsize'      , [253 , s:bg+8] , [235 , ''])
 	call s:hi('ElelineCurFname'   , [236 , 150]    , [171 , '']     , 'bold')
-	call s:hi('ElelineGitBranch'  , [178 , s:bg+2] , [89  , '']     , 'bold')
+	call s:hi('ElelineGitBranch'  , [184 , s:bg+2] , [89  , '']     , 'bold')
 	call s:hi('ElelineGitStatus'  , [208 , s:bg+2] , [89  , ''])
 	call s:hi('ElelineError'      , [197 , s:bg+2] , [197 , ''])
 	call s:hi('ElelineWarning'    , [214 , s:bg+2] , [214 , ''])
 	call s:hi('ElelineVista'      , [149 , s:bg+2] , [149 , ''])
-	call s:hi('ElelineReadonly'   , [184 , s:bg+2] , [184 , '']     , 'bold')
+	call s:hi('ElelineReadonly'   , [178 , s:bg+2] , [178 , '']     , 'bold')
 
 	if &bg ==# 'dark'
 		call s:hi('StatusLine' , [150 , s:bg+2], [150, ''] , 'none')
