@@ -377,12 +377,24 @@ else
 	call s:SetStatusLine()
 endif
 
+function! s:DetectModeChange() abort
+	if mode() ==# 'n'
+		call s:hi('ElelineCurFname' , [236, 150], [89, ''])
+	elseif mode() ==# 'i'
+		call s:hi('ElelineCurFname' , [232, 179], [232, 179])
+	elseif mode() ==# 'R'
+		call s:hi('ElelineCurFname' , [232, 116] , [232, 116])
+	else
+		call s:hi('ElelineCurFname' , [232, 110], [232, 110])
+	endif
+endfunction
+
 augroup eleline
 	autocmd!
 	autocmd User GitGutter,Startified,LanguageClientStarted call s:SetStatusLine()
 	" Change colors for insert mode
 	autocmd InsertLeave * call s:hi('ElelineCurFname', [236, 150], [89, ''])
-	autocmd InsertEnter,InsertChange * call s:InsertStatuslineColor(v:insertmode)
+	autocmd InsertEnter,InsertChange,ModeChanged * call s:DetectModeChange()
 	autocmd BufWinEnter,ShellCmdPost,BufWritePost * call s:SetStatusLine()
 	autocmd FileChangedShellPost,ColorScheme * call s:SetStatusLine()
 	autocmd FileReadPre,ShellCmdPost,FileWritePost * call s:SetStatusLine()
