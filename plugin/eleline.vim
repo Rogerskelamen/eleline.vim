@@ -328,7 +328,7 @@ function! s:hi_statusline() abort
 	call s:hi('ElelineBufnrWinnr' , [232 , 178]    , [89  , ''])
 	call s:hi('ElelineTotalBuf'   , [178 , s:bg+8] , [240 , ''])
 	call s:hi('ElelinePaste'      , [232 , 178]    , [232 , 178]    , 'bold')
-	call s:hi('ElelineFsize'      , [250 , s:bg+8] , [235 , ''])
+	call s:hi('ElelineFsize'      , [253 , s:bg+8] , [235 , ''])
 	call s:hi('ElelineCurFname'   , [236 , 140]    , [171 , '']     , 'bold')
 	call s:hi('ElelineGitBranch'  , [184 , s:bg+2] , [89  , '']     , 'bold')
 	call s:hi('ElelineGitStatus'  , [208 , s:bg+2] , [89  , ''])
@@ -349,7 +349,7 @@ endfunction
 " set for insertmode color
 function! s:InsertStatuslineColor(mode) abort
 	if a:mode ==# 'i'
-		call s:hi('ElelineCurFname' , [232, 124], [232, 124])
+		call s:hi('ElelineCurFname' , [232, 149], [232, 149])
 	elseif a:mode ==# 'r'
 		call s:hi('ElelineCurFname' , [251, 32] , [251, 89])
 	elseif a:mode ==# 'v'
