@@ -335,7 +335,7 @@ function! s:hi_statusline() abort
 	call s:hi('ElelineError'      , [197 , s:bg+2] , [197 , ''])
 	call s:hi('ElelineWarning'    , [214 , s:bg+2] , [214 , ''])
 	call s:hi('ElelineVista'      , [149 , s:bg+2] , [149 , ''])
-	call s:hi('ElelineReadonly'   , [178 , s:bg+2]     , [178 , '']     , 'bold')
+	call s:hi('ElelineReadonly'   , [178 , s:bg+2] , [178 , '']     , 'bold')
 
 	if &bg ==# 'dark'
 		call s:hi('StatusLine' , [140 , s:bg+2], [140, ''] , 'none')
@@ -381,7 +381,7 @@ augroup eleline
 	autocmd User GitGutter,Startified,LanguageClientStarted call s:SetStatusLine()
 	" Change colors for insert mode
 	" autocmd InsertLeave * call s:hi('ElelineCurFname', [236, 140], [89, ''])
-	autocmd InsertEnter,InsertChange, InsertLeave * call s:InsertStatuslineColor(v:insertmode)
+	autocmd InsertEnter,InsertChange,InsertLeave * call s:InsertStatuslineColor(v:insertmode)
 	autocmd BufWinEnter,ShellCmdPost,BufWritePost * call s:SetStatusLine()
 	autocmd FileChangedShellPost,ColorScheme * call s:SetStatusLine()
 	autocmd FileReadPre,ShellCmdPost,FileWritePost * call s:SetStatusLine()
