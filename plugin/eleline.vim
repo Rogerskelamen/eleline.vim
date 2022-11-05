@@ -264,7 +264,7 @@ endfunction
 
 let s:colors = {
 	\   140 : '#af87d7', 149 : '#99cc66', 160 : '#d70000',
-	\   171 : '#d75fd7', 178 : '#ffbb7d', 184 : '#dbbc7f',
+	\   171 : '#d75fd7', 178 : '#ffbb7d', 184 : '#ffe920',
 	\   208 : '#ff8700', 232 : '#333300', 197 : '#cc0033',
 	\   214 : '#ffff66', 124 : '#af3a03', 172 : '#b57614',
 	\   32  : '#3a81c3', 89  : '#6c3163', 150 : '#a7c080',
@@ -331,12 +331,12 @@ function! s:hi_statusline() abort
 	call s:hi('ElelinePaste'      , [232 , 178]    , [232 , 178]    , 'bold')
 	call s:hi('ElelineFsize'      , [253 , s:bg+8] , [235 , ''])
 	call s:hi('ElelineCurFname'   , [236 , 150]    , [171 , '']     , 'bold')
-	call s:hi('ElelineGitBranch'  , [184 , s:bg+2] , [89  , '']     , 'bold')
+	call s:hi('ElelineGitBranch'  , [178 , s:bg+2] , [89  , '']     , 'bold')
 	call s:hi('ElelineGitStatus'  , [208 , s:bg+2] , [89  , ''])
 	call s:hi('ElelineError'      , [197 , s:bg+2] , [197 , ''])
 	call s:hi('ElelineWarning'    , [214 , s:bg+2] , [214 , ''])
 	call s:hi('ElelineVista'      , [149 , s:bg+2] , [149 , ''])
-	call s:hi('ElelineReadonly'   , [178 , s:bg+2] , [178 , '']     , 'bold')
+	call s:hi('ElelineReadonly'   , [184 , s:bg+2] , [184 , '']     , 'bold')
 
 	if &bg ==# 'dark'
 		call s:hi('StatusLine' , [150 , s:bg+2], [150, ''] , 'none')
