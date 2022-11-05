@@ -267,7 +267,8 @@ let s:colors = {
 	\   171 : '#d75fd7', 178 : '#ffbb7d', 184 : '#ffe920',
 	\   208 : '#ff8700', 232 : '#333300', 197 : '#cc0033',
 	\   214 : '#ffff66', 124 : '#af3a03', 172 : '#b57614',
-	\   32  : '#3a81c3', 89  : '#6c3163',
+	\   32  : '#3a81c3', 89  : '#6c3163', 150 : '#a7c080',
+	\   179 : '#d3c6aa', 110 : '#e67e80', 116 : '#e69875',
 	\
 	\   235 : '#262626', 236 : '#303030', 237 : '#3a3a3a',
 	\   238 : '#444444', 239 : '#4e4e4e', 240 : '#585858',
@@ -329,7 +330,7 @@ function! s:hi_statusline() abort
 	call s:hi('ElelineTotalBuf'   , [178 , s:bg+8] , [240 , ''])
 	call s:hi('ElelinePaste'      , [232 , 178]    , [232 , 178]    , 'bold')
 	call s:hi('ElelineFsize'      , [253 , s:bg+8] , [235 , ''])
-	call s:hi('ElelineCurFname'   , [236 , 140]    , [171 , '']     , 'bold')
+	call s:hi('ElelineCurFname'   , [236 , 150]    , [171 , '']     , 'bold')
 	call s:hi('ElelineGitBranch'  , [184 , s:bg+2] , [89  , '']     , 'bold')
 	call s:hi('ElelineGitStatus'  , [208 , s:bg+2] , [89  , ''])
 	call s:hi('ElelineError'      , [197 , s:bg+2] , [197 , ''])
@@ -338,7 +339,7 @@ function! s:hi_statusline() abort
 	call s:hi('ElelineReadonly'   , [178 , s:bg+2] , [178 , '']     , 'bold')
 
 	if &bg ==# 'dark'
-		call s:hi('StatusLine' , [140 , s:bg+2], [140, ''] , 'none')
+		call s:hi('StatusLine' , [150 , s:bg+2], [150, ''] , 'none')
 	endif
 
 	call s:hi('Eleline7'      , [249 , s:bg+3], [237, ''] )
@@ -349,11 +350,11 @@ endfunction
 " set for insertmode color
 function! s:InsertStatuslineColor(mode) abort
 	if a:mode ==# 'i'
-		call s:hi('ElelineCurFname' , [232, 149], [232, 149])
-	elseif a:mode ==# 'r'
-		call s:hi('ElelineCurFname' , [251, 32] , [251, 89])
+		call s:hi('ElelineCurFname' , [232, 179], [232, 179])
 	elseif a:mode ==# 'v'
-		call s:hi('ElelineCurFname' , [251, 249], [251, 249])
+		call s:hi('ElelineCurFname' , [232, 110], [232, 110])
+	elseif a:mode ==# 'r'
+		call s:hi('ElelineCurFname' , [232, 116] , [232, 116])
 	else
 		call s:hi('ElelineCurFname' , [232, 178], [89, ''])
 	endif
@@ -380,7 +381,7 @@ augroup eleline
 	autocmd!
 	autocmd User GitGutter,Startified,LanguageClientStarted call s:SetStatusLine()
 	" Change colors for insert mode
-	autocmd InsertLeave * call s:hi('ElelineCurFname', [236, 140], [89, ''])
+	autocmd InsertLeave * call s:hi('ElelineCurFname', [236, 150], [89, ''])
 	autocmd InsertEnter,InsertChange * call s:InsertStatuslineColor(v:insertmode)
 	autocmd BufWinEnter,ShellCmdPost,BufWritePost * call s:SetStatusLine()
 	autocmd FileChangedShellPost,ColorScheme * call s:SetStatusLine()
