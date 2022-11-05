@@ -370,7 +370,7 @@ function! s:SetStatusLine(...) abort
 	let &l:statusline = s:StatusLine()
 	" User-defined highlightings shoule be put after colorscheme command.
 	call s:hi_statusline()
-	call s:DetectModeChange()
+	call s:DetectModeChange() | " to avoid mode colors don't work with GitBranch updating
 endfunction
 
 if exists('*timer_start')
