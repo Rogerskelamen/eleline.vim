@@ -325,7 +325,7 @@ endfunction
 
 " set color for tips
 function! s:hi_statusline() abort
-	call s:hi('ElelineBufnrWinnr' , [232 , 178]    , [89  , ''] )
+	call s:hi('ElelineBufnrWinnr' , [232 , 178]    , [89  , ''])
 	call s:hi('ElelineTotalBuf'   , [178 , s:bg+8] , [240 , ''])
 	call s:hi('ElelinePaste'      , [232 , 178]    , [232 , 178]    , 'bold')
 	call s:hi('ElelineFsize'      , [250 , s:bg+6] , [235 , ''])
@@ -335,7 +335,7 @@ function! s:hi_statusline() abort
 	call s:hi('ElelineError'      , [197 , s:bg+2] , [197 , ''])
 	call s:hi('ElelineWarning'    , [214 , s:bg+2] , [214 , ''])
 	call s:hi('ElelineVista'      , [149 , s:bg+2] , [149 , ''])
-	call s:hi('ElelineReadonly'   , [178 , '']     , [178 , '']     , 'bold')
+	call s:hi('ElelineReadonly'   , [178 , s:bg+2]     , [178 , '']     , 'bold')
 
 	if &bg ==# 'dark'
 		call s:hi('StatusLine' , [140 , s:bg+2], [140, ''] , 'none')
