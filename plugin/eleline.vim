@@ -269,6 +269,7 @@ let s:colors = {
 	\   214 : '#ffff66', 124 : '#af3a03', 172 : '#b57614',
 	\   32  : '#3a81c3', 89  : '#6c3163', 150 : '#a7c080',
 	\   179 : '#d3c6aa', 110 : '#e67e80', 116 : '#e69875',
+	\   108 : '#83c092', 175 : '#d699b6',
 	\
 	\   235 : '#262626', 236 : '#303030', 237 : '#3a3a3a',
 	\   238 : '#444444', 239 : '#4e4e4e', 240 : '#585858',
@@ -384,7 +385,11 @@ function! s:DetectModeChange() abort
 		call s:hi('ElelineCurFname' , [232, 179], [232, 179])
 	elseif mode() ==# 'R'
 		call s:hi('ElelineCurFname' , [232, 116] , [232, 116])
-	else
+	elseif mode() ==# 'c'
+		call s:hi('ElelineCurFname' , [232, 108] , [232, 108])
+	elseif mode() ==# 't'
+		call s:hi('ElelineCurFname' , [232, 175] , [232, 175])
+	else | " for visual mode
 		call s:hi('ElelineCurFname' , [232, 110], [232, 110])
 	endif
 endfunction
