@@ -32,8 +32,8 @@ let s:is_win = has('win32')
 " others: bash -c git branch
 let s:git_branch_cmd = add(s:is_win ? ['cmd', '/c'] : ['bash', '-c'], 'git branch')
 " set git symbol to \ue0a0 if powerline_fonts exists
-let s:git_branch_symbol = s:font ? " \ue0a0 " : ' Git:'
-let s:git_branch_star_substituted = s:font ? "  \ue0a0" : '  Git:'
+let s:git_branch_symbol = s:font ? "  " : ' Git:'
+let s:git_branch_star_substituted = s:font ? "   " : '  Git:'
 let s:jobs = {}
 
 " display number of current buffer and window
